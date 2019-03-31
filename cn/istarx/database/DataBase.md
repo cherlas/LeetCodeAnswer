@@ -10,3 +10,14 @@ WHERE
 
 ----
 
+###175. Combine Two Tables
+```sql
+SELECT
+	FirstName, LastName, City, State
+FROM
+	Person
+LEFT JOIN
+	Address
+ON
+	Person.personId = Address.PersonId
+``
