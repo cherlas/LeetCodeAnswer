@@ -20,4 +20,14 @@ LEFT JOIN
 	Address
 ON
 	Person.personId = Address.PersonId
-``
+```
+
+###183. Customers Who Never Order
+````sql
+SELECT Customers.Name AS Customers
+FROM Customers
+WHERE 
+    Customers.Id NOT IN 
+        (SELECT Orders.CustomerId FROM Orders)
+````
+
