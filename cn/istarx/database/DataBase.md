@@ -31,3 +31,15 @@ WHERE
         (SELECT Orders.CustomerId FROM Orders)
 ````
 
+###596. Classes More Than 5 Students
+````sql
+SELECT 
+    class
+FROM 
+    (SELECT 
+    class, COUNT(DISTINCT(student)) AS num 
+    FROM courses
+    GROUP BY class) AS tmp
+WHERE 
+    num >= 5
+````
