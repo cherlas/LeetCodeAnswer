@@ -43,3 +43,25 @@ FROM
 WHERE 
     num >= 5
 ````
+
+### 184. Department Highest Salary
+
+```sql
+SELECT 
+    Department.Name AS "Department",
+    Employee.Name AS "Employee",
+    Employee.Salary
+FROM
+    Employee
+    JOIN
+    Department ON Department.Id = Employee.DepartmentId
+WHERE
+    (Employee.DepartmentId , Salary) IN
+    (SELECT 
+        DepartmentId , Max(Salary)
+     FROM 
+        Employee
+     GROUP BY DepartmentId
+    )
+```
+
