@@ -1,85 +1,90 @@
 package cn.istarx.java;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class NO146_LRUCache {
     public static void main(String[] args) {
         LRUCache cache = new LRUCache(2);
-        cache.put(1,1);
-        cache.put(1,3);
+        System.out.println(cache.get(2));
+        cache.put(1, 1);
+        cache.put(2, 2);
         System.out.println(cache.get(1));
-        System.out.println(cache.get(1));
-        System.out.println(cache.get(1));
+        cache.put(3, 3);
+        System.out.println(cache.get(2));
+        cache.put(4, 1);
     }
 
     static class LRUCache {
-        List mKeys;
-        Node mHead;
-        Node mTail;
         private int mCapacity;
+        private Map<Integer, Integer> mCache;
+
         public LRUCache(int capacity) {
             this.mCapacity = capacity;
-            mKeys = new ArrayList(capacity);
-            mHead = new Node(0, 0);
-            mTail = mHead;
+            mCache = new LinkedHashMap();
         }
 
         public int get(int key) {
-            if (mKeys.contains(key)) {
-                Node tmp = mHead.next;
-                Node pre = null;
-                while (tmp.key != key) {
-                    pre = tmp;
-                    tmp = tmp.next;
-                }
-                if (pre != null) {
-                    pre.next = tmp.next;
-                }
-                tmp.next = mHead.next;
-                mHead.next = tmp;
-                return tmp.value;
+            if (mCache.containsKey(key)) {
+                int newValue = mCache.get(key);
+                mCache.remove(key);
+                mCache.put(key, newValue);
+                return newValue;
             } else {
                 return -1;
             }
         }
 
         public void put(int key, int value) {
-            if (mCapacity == 0) {
-                return;
-            }
-            if (mKeys.contains(key)) {
-                Node tmp = mHead.next;
-                while (tmp.key != key) {
-                    tmp = tmp.next;
+            if (mCache.containsKey(key)) {
+                mCache.remove(key, value);
+            } else if (mCache.size() >= mCapacity) {
+                for (int k : lru.keySet()) {
+                    mCache.remove(k);
+                    break;
                 }
-                tmp.value = value;
             }
-            if (mKeys.size() == mCapacity) {
-                mKeys.remove(mTail.key);
-                mKeys.add(key);
-                mTail.key = key;
-                mTail.value = value;
-            } else {
-                mKeys.add(key);
-                mTail.next = new Node(key, value);
-                mTail = mTail.next;
-            }
-        }
-
-        private class Node {
-            int key;
-            int value;
-            Node next;
-
-            Node(int key, int value) {
-                this.key = key;
-                this.value = value;
-                this.next = null;
-            }
+            mCache.put(key, value);
         }
     }
-
 }
 
 
+/*import java.util.LinkedHashMap;
+
+class LRUMap<K, V> extends LinkedHashMap<K, V> {
+    private int cacheSize ;
+
+    public LRUMap(int capacity) {
+        super(capacity, 0.75f, true) ; //access-based eviction set to 'true' (as opposed to 'insertion'-based eviciton)
+        cacheSize = capacity ;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > cacheSize ;
+    }
+}
+
+
+public class LRUCache  {
+
+    LRUMap<Integer, Integer> map ; //use extension of LinkedHashMap here
+
+    public LRUCache(int capacity) {
+        map = new LRUMap<Integer, Integer>(capacity) ; //make sure to pass 'capacity' on to LinkedHashMap ctor
+    }
+
+
+    public int get(int key) {
+
+        if(map.containsKey(key)) {
+            return map.get(key) ;
+        }
+        return -1;
+    }
+
+    public void set(int key, int value) {
+        map.put(key, value) ;
+    }
+}*/
