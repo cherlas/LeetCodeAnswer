@@ -39,7 +39,7 @@ public class NO146_LRUCache {
             if (mCache.containsKey(key)) {
                 mCache.remove(key, value);
             } else if (mCache.size() >= mCapacity) {
-                for (int k : lru.keySet()) {
+                for (int k : mCache.keySet()) {
                     mCache.remove(k);
                     break;
                 }
